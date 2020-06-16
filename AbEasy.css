@@ -1,0 +1,265 @@
+/* ================================================== */
+/* アプリケーション                                   */
+/* ================================================== */
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+/* 画像をプリロードするための仕掛け */
+body::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  overflow: hidden;
+  content: url("./img/ajax-loader.gif");
+}
+
+.application-area {
+  width: 620px;
+  margin: 0 auto;
+  border-left  : solid 1px #03a9f4;
+  border-right : solid 1px #03a9f4;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* ================================================== */
+/* ページ共通                                         */
+/* ================================================== */
+div.page {
+  width: 98%;
+  height: 400px;
+  margin: 0 auto;
+  margin-top: 0.5%;
+  margin-bottom: 0.5%;
+}
+
+div.tab-area {
+  width: 607px; /* application-area 620 * 0.98 = 607 */
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+div.header-area {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 1.0%;
+}
+
+span.header {
+  font-size: 130%;
+  font-weight: bold;
+  font-family: sans-serif, monospace;
+}
+
+a.link:hover img {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  -ms-filter: "alpha(opacity=70)";
+}
+
+a.pdf-link {
+  font-size: 105%;
+  font-weight: bold;
+  margin-left: 1.0%;
+  margin-right: 1.0%;
+}
+
+div.scroll-head {
+  width: 100%;
+}
+
+div.scroll-body {
+  width: 100%;
+  height: 320px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+table.scroll {
+  table-layout: fixed;
+}
+
+table.scroll th {
+  padding: 1%;
+  text-align: center;
+}
+
+table.scroll td {
+  padding: 1%;
+}
+
+td.currency {
+  text-align: right;
+}
+
+/* ================================================== */
+/* 支出タブ                                           */
+/* ================================================== */
+col.exp-date { width: 147px; }
+col.exp-name { width: 254px; }
+col.exp-type { width:  80px; }
+col.exp-cost { width: 110px; }
+col.exp-scrl { width:  16px; }
+
+td.exp-date {
+  text-align: center;
+}
+
+td.exp-type {
+  text-align: center;
+}
+
+/* ================================================== */
+/* 月次タブ                                           */
+/* ================================================== */
+div.summary-pdf-area {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 1.0%;
+  margin-bottom: 1.0%;
+  text-align: right;
+}
+
+table.summary {
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 3%;
+  border-collapse: collapse;
+}
+
+table.summary th {
+  width: 18%;
+  padding: 1.2%;
+  vertical-align: middle;
+}
+
+table.summary td {
+  width: 32%;
+  padding: 1.2%;
+  padding-right: 6.2%;
+}
+
+table.summary .dummy {
+  background-color: transparent;
+  border-top-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: hidden;
+}
+
+/* ================================================== */
+/* 推移タブ                                           */
+/* ================================================== */
+#graphic {
+  margin-top: 5%;
+}
+
+/* ================================================== */
+/* 収支タブ                                           */
+/* ================================================== */
+div.balance-pdf-area {
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 2.0%;
+  margin-bottom: 1.0%;
+  text-align: right;
+}
+
+col.bln-year { width:  86px; }
+col.bln-earn { width: 101px; }
+col.bln-bnus { width: 101px; }
+col.bln-exps { width: 101px; }
+col.bln-spcl { width: 101px; }
+col.bln-blnc { width: 101px; }
+col.bln-scrl { width:  16px; }
+
+td.bln-year {
+  text-align: center;
+}
+
+/* ================================================== */
+/* 秘密タブ                                           */
+/* ================================================== */
+col.prv-date { width: 147px; }
+col.prv-name { width: 198px; }
+col.prv-cost { width: 123px; }
+col.prv-blnc { width: 123px; }
+col.prv-scrl { width:  16px; }
+
+div.scroll-body-private {
+  width: 100%;
+  height: 350px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+td.prv-date {
+  text-align: center;
+}
+
+/* ================================================== */
+/* 設定タブ                                           */
+/* ================================================== */
+div.import-area {
+  width: 98%;
+  margin: 0 auto;
+  margin-top: 2%;
+}
+
+div.drop-zone {
+  width: 272px;
+  position: relative;
+  border-radius: 5px;
+  background-color: #eeeeee;
+}
+
+label > input {
+  display: none;
+}
+
+div.overlay {
+  position: absolute;
+  width: 270px;
+  height: 54px;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 100;
+}
+
+div.no-loading {
+  display: none;
+}
+
+div.loading {
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0.65;
+  background-color: #f7f7f9;
+  background-image: url("./img/ajax-loader.gif");
+  background-position: center 200px;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+div.export-area {
+  width: 98%;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+
+/* ================================================== */
+/* フッタ                                             */
+/* ================================================== */
+.page-footer {
+  padding: 0;
+}

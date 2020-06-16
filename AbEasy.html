@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AbEasy</title>
+    <link rel="icon" href="./img/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/chart.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="AbEasy.css" media="screen,projection" />
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="application-area">
+    <header>
+      <nav class="nav-extended light-blue">
+        <div class="nav-content light-blue">
+          <ul id="main-tab" class="tabs tabs-transparent">
+            <li class="tab"><a class="active" href="#tab-expense">支出</a></li>
+            <li class="tab"><a href="#tab-summary">月次</a></li>
+            <li class="tab"><a href="#tab-graphic">推移</a></li>
+            <li class="tab"><a href="#tab-balance">収支</a></li>
+            <li class="tab"><a href="#tab-private">秘密</a></li>
+            <li class="tab"><a href="#tab-uploads">ＤＢ</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <main id="app" v-cloak>
+      <div v-bind:class="{ 'loading': is_loading,  'no-loading': is_not_loading }"></div>
+
+      <!-- ================================================== -->
+      <!-- 支出タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-expense" class="col s12 page">
+        <div class="tab-area">
+          <div class="header-area">
+            <a href="#" class="link" v-on:click="expense_prev_year" ><img src="./img/prev_year.svg" /></a>
+            <a href="#" class="link" v-on:click="expense_prev_month"><img src="./img/prev_mnth.svg" /></a>
+            <span class="header">{{ expense_title }}</span>
+            <a href="#" class="link" v-on:click="expense_next_month"><img src="./img/next_mnth.svg" /></a>
+            <a href="#" class="link" v-on:click="expense_next_year" ><img src="./img/next_year.svg" /></a>
+          </div>
+          <div class="scroll-head">
+            <table class="scroll">
+              <colgroup>
+                <col class="exp-date" />
+                <col class="exp-name" />
+                <col class="exp-type" />
+                <col class="exp-cost" />
+                <col class="exp-scrl" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>名称</th>
+                  <th>種別</th>
+                  <th>金額</th>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="scroll-body">
+            <table class="scroll">
+              <colgroup>
+                <col class="exp-date" />
+                <col class="exp-name" />
+                <col class="exp-type" />
+                <col class="exp-cost" />
+                <col class="exp-scrl" />
+              </colgroup>
+              <tbody>
+                <tr v-for="exp in expenses">
+                  <td class="exp-date">{{ exp.date }}</td>
+                  <td class="exp-name">{{ exp.name }}</td>
+                  <td class="exp-type">{{ exp.type }}</td>
+                  <td class="currency">{{ exp.cost }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ================================================== -->
+      <!-- 月次タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-summary" class="col s12 page">
+        <div class="tab-area">
+          <div class="header-area">
+            <a href="#" class="link" v-on:click="summary_prev_year" ><img src="./img/prev_year.svg" /></a>
+            <a href="#" class="link" v-on:click="summary_prev_month"><img src="./img/prev_mnth.svg" /></a>
+            <span class="header">{{ summary_title }}</span>
+            <a href="#" class="link" v-on:click="summary_next_month"><img src="./img/next_mnth.svg" /></a>
+            <a href="#" class="link" v-on:click="summary_next_year" ><img src="./img/next_year.svg" /></a>
+          </div>
+          <div class="summary-pdf-area">
+            <a href="#" class="pdf-link">収支表</a>
+            <a href="#" class="pdf-link">光熱費</a>
+          </div>
+          <table class="summary">
+            <tr>
+              <th>食費  </th><td class="currency">&yen;{{ summary_food }}</td>
+              <th>家賃  </th><td class="currency">&yen;{{ summary_hous }}</td>
+            </tr>
+            <tr>
+              <th>外食費</th><td class="currency">&yen;{{ summary_otfd }}</td>
+              <th>光熱費</th><td class="currency">&yen;{{ summary_engy }}</td>
+            </tr>
+          </table>
+          <table class="summary">
+            <tr>
+              <th>雑貨  </th><td class="currency">&yen;{{ summary_good }}</td>
+              <th>通信費</th><td class="currency">&yen;{{ summary_cnct }}</td>
+            </tr>
+            <tr>
+              <th>交際費</th><td class="currency">&yen;{{ summary_frnd }}</td>
+              <th>医療費</th><td class="currency">&yen;{{ summary_medi }}</td>
+            </tr>
+            <tr>
+              <th>交通費</th><td class="currency">&yen;{{ summary_trfc }}</td>
+              <th>保険料</th><td class="currency">&yen;{{ summary_insu }}</td>
+            </tr>
+            <tr>
+              <th>遊行費</th><td class="currency">&yen;{{ summary_play }}</td>
+              <th>その他</th><td class="currency">&yen;{{ summary_othr }}</td>
+            </tr>
+          </table>
+          <table class="summary">
+            <tr>
+              <th class="dummy"></th><td class="dummy"></td>
+              <th>合計  </th><td class="currency">&yen;{{ summary_ttal }}</td>
+            </tr>
+            <tr>
+              <th class="dummy"></th><td class="dummy"></td>
+              <th>収支  </th><td class="currency">&yen;{{ summary_blnc }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <!-- ================================================== -->
+      <!-- 推移タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-graphic" class="col s12 page">
+        <div class="tab-area">
+          <div class="header-area">
+            <a href="#" class="link" v-on:click="graphic_prev_year" ><img src="./img/prev_year.svg" /></a>
+            <a href="#" class="link" v-on:click="graphic_prev_month"><img src="./img/prev_mnth.svg" /></a>
+            <span class="header">{{ graphic_title }}</span>
+            <a href="#" class="link" v-on:click="graphic_next_month"><img src="./img/next_mnth.svg" /></a>
+            <a href="#" class="link" v-on:click="graphic_next_year" ><img src="./img/next_year.svg" /></a>
+          </div>
+          <canvas id="graphic"></canvas>
+        </div>
+      </div>
+      <!-- ================================================== -->
+      <!-- 収支タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-balance" class="col s12 page">
+        <div class="tab-area">
+          <div class="balance-pdf-area">
+            <a href="#" class="pdf-link">収支表</a>
+          </div>
+          <div class="scroll-head">
+            <table class="scroll">
+              <colgroup>
+                <col class="bln-year" />
+                <col class="bln-earn" />
+                <col class="bln-bnus" />
+                <col class="bln-exps" />
+                <col class="bln-spcl" />
+                <col class="bln-blnc" />
+                <col class="bln-scrl" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>年度</th>
+                  <th>収入</th>
+                  <th>特入</th>
+                  <th>支出</th>
+                  <th>特出</th>
+                  <th>収支</th>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="scroll-body">
+            <table class="scroll">
+              <colgroup>
+                <col class="bln-year" />
+                <col class="bln-earn" />
+                <col class="bln-bnus" />
+                <col class="bln-exps" />
+                <col class="bln-spcl" />
+                <col class="bln-blnc" />
+                <col class="bln-scrl" />
+              </colgroup>
+              <tbody>
+                <tr v-for="bln in balances">
+                  <td class="bln-year">{{ bln.year }}</td>
+                  <td class="currency">&yen;{{ bln.earn.toLocaleString() }}</td>
+                  <td class="currency">&yen;{{ bln.bnus.toLocaleString() }}</td>
+                  <td class="currency">&yen;{{ bln.expense.toLocaleString() }}</td>
+                  <td class="currency">&yen;{{ bln.special.toLocaleString() }}</td>
+                  <td class="currency">&yen;{{ bln.balance.toLocaleString() }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ================================================== -->
+      <!-- 秘密タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-private" class="col s12 page">
+        <div class="tab-area">
+          <div class="scroll-head">
+            <table class="scroll">
+              <colgroup>
+                <col class="prv-date" />
+                <col class="prv-name" />
+                <col class="prv-cost" />
+                <col class="prv-blnc" />
+                <col class="prv-scrl" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>日付</th>
+                  <th>名称</th>
+                  <th>金額</th>
+                  <th>収支</th>
+                  <th></th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="scroll-body-private">
+            <table class="scroll">
+              <colgroup>
+                <col class="prv-date" />
+                <col class="prv-name" />
+                <col class="prv-cost" />
+                <col class="prv-blnc" />
+                <col class="prv-scrl" />
+              </colgroup>
+              <tbody>
+                <tr v-for="prv in privates">
+                  <td class="prv-date">{{ prv.date }}</td>
+                  <td class="prv-name">{{ prv.name }}</td>
+                  <td class="currency">&yen;{{ prv.cost.toLocaleString() }}</td>
+                  <td class="currency">&yen;{{ prv.blnc.toLocaleString() }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- ================================================== -->
+      <!-- 設定タブ                                           -->
+      <!-- ================================================== -->
+      <div id="tab-uploads" class="col s12 page">
+        <div class="import-area">
+          <span class="header">インポート</span>
+          <div class="drop-zone" v-on:dragenter="drag_enter">
+            <div v-bind:class="{ 'overlay': is_drag_enter }"
+              v-on:dragleave="drag_leave"
+              v-on:dragover="drag_over"
+              v-on:drop="drop">
+            </div>
+            <label for="file-import" class="btn-large light-blue">
+              ファイルを選択してください．
+              <input type="file" name="import" id="file-import" @change="file_change" />
+            </label>
+          </div>
+        </div>
+        <div class="export-area">
+          <span class="header">エクスポート</span>
+          <div>
+            <a class="btn-large light-blue" v-on:click="export_csv">ダウンロード</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="page-footer light-blue">
+        <div class="container" style="width:100%; margin:0;">
+          <div class="row" style="margin:0;">
+            <div class="col s12">
+              <span class="right">&copy; 2020 m-kishi</span>
+            </div>
+          </div>
+        </div>
+    </footer>
+    </section>
+
+    <script type="text/javascript" src="lib/vue.min.js"></script>
+
+    <script type="text/javascript" src="lib/chart.min.js"></script>
+    <script type="text/javascript" src="lib/papaparse.min.js"></script>
+    <script type="text/javascript" src="lib/materialize.min.js"></script>
+    <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
+
+    <script type="text/javascript" src="AbEasy.js"></script>
+
+    <script type="text/javascript">
+      M.Tabs.init($('#main-tab'));
+    </script>
+  </body>
+</html>
