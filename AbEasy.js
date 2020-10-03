@@ -635,7 +635,7 @@ var app = new Vue({
         privates.push({
           date: exp.date,
           name: exp.name,
-          cost: exp.cost,
+          cost: Number(exp.cost),
           blnc: balance,
         });
       }
