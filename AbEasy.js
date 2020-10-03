@@ -686,6 +686,8 @@ var app = new Vue({
           vm.initialize();
           vm.is_loading = false;
           vm.is_drag_enter = false;
+
+          alert('インポートしました．');
         },
       });
     },
