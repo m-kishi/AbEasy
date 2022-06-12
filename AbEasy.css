@@ -53,6 +53,12 @@ div.header-area {
   margin-bottom: 1.0%;
 }
 
+div.dummy-area {
+  width: 100%;
+  margin-top: 2%;
+  margin-bottom: 1.0%;
+}
+
 span.header {
   font-size: 130%;
   font-weight: bold;
