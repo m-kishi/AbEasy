@@ -13,7 +13,7 @@
     }
   </style>
 </head>
-<body>
+<body id="hoge">
   <section class="application-area">
     <header>
       <nav class="nav-extended light-blue">
@@ -100,7 +100,7 @@
             <a href="#" class="link" v-on:click="summary_next_year" ><img src="./img/next_year.svg" /></a>
           </div>
           <div class="summary-pdf-area">
-            <a href="#" class="pdf-link">収支表</a>
+            <a href="#" class="pdf-link" v-on:click="pdf_summary_report">収支表</a>
             <a href="#" class="pdf-link">光熱費</a>
           </div>
           <table class="summary">
@@ -272,9 +272,9 @@
           <span class="header">インポート</span>
           <div class="drop-zone" v-on:dragenter="drag_enter">
             <div v-bind:class="{ 'overlay': is_drag_enter }"
-              v-on:dragleave="drag_leave"
-              v-on:dragover="drag_over"
-              v-on:drop="drop">
+                 v-on:dragleave="drag_leave"
+                 v-on:dragover="drag_over"
+                 v-on:drop="drop">
             </div>
             <label for="file-import" class="btn-large light-blue">
               ファイルを選択してください．
@@ -307,7 +307,8 @@
   <script type="text/javascript" src="lib/papaparse.min.js"></script>
   <script type="text/javascript" src="lib/materialize.min.js"></script>
   <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
-
+  <!-- <script type="text/javascript" src="lib/html2pdf.bundle.min.js"></script> -->
+  <script type="text/javascript" src="lib/html2pdf.bundle.js"></script>
   <script type="text/javascript" src="AbEasy.js"></script>
 
   <script type="text/javascript">

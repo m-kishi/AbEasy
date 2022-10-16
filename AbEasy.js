@@ -336,6 +336,27 @@ var app = new Vue({
       }
       return this.empty_summary(date);
     },
+    // 月次タブ収支表
+    pdf_summary_report: function() {
+      console.log("pdf_summary_report");
+      html2pdf().set({
+        margin: 1,
+        filename: 'hoge.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { dpi: 192, letterRendering: true },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' },
+      }).from(document.getElementById('hoge'))
+      .toPdf()
+      .save()
+      .then(() => {
+        console.log('save end');
+      })
+      .catch ((e) => {
+        console.log(e);
+      });
+      console.log('end!!');
+      console.log(document.getElementById('hoge'));
+    },
     // 集計処理(月次)
     create_summaries: function(expenses) {
       if (expenses == null || expenses.length == 0) {
