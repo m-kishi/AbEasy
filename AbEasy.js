@@ -21,6 +21,27 @@ var app = new Vue({
     privates: [],
     is_loading: false,
     is_drag_enter: false,
+    type: {
+      FOOD: "食費",
+      OTFD: "外食費",
+      GOOD: "雑貨",
+      FRND: "交際費",
+      TRFC: "交通費",
+      PLAY: "遊行費",
+      HOUS: "家賃",
+      ENGY: "光熱費",
+      CNCT: "通信費",
+      MEDI: "医療費",
+      INSU: "保険料",
+      OTHR: "その他",
+      EARN: "収入",
+      TTAL: "合計",
+      BLNC: "収支",
+      BNUS: "特入",
+      SPCL: "特出",
+      PRVI: "秘密入",
+      PRVO: "秘密出",  
+    }
   },
   //==================================================
   // 初期化処理(DOM未生成)
@@ -200,6 +221,10 @@ var app = new Vue({
         this.privates = [];
       }
     },
+    // 備考の判定
+    has_note: function(exp) {
+      return exp.note;
+    },
     // 前年切り替え
     prev_year: function(date) {
       var dt = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -373,30 +398,30 @@ var app = new Vue({
     // CSVの種別を内部的な種別IDに変換するメソッドを生成
     type_filter: function(is_special) {
       var f = {}
-      f["食費"  ] = function() { return "food"; };
-      f["外食費"] = function() { return "otfd"; };
-      f["雑貨"  ] = function() { return "good"; };
-      f["交際費"] = function() { return "frnd"; };
-      f["交通費"] = function() { return "trfc"; };
-      f["遊行費"] = function() { return "play"; };
-      f["家賃"  ] = function() { return "hous"; };
-      f["光熱費"] = function() { return "engy"; };
-      f["通信費"] = function() { return "cnct"; };
-      f["医療費"] = function() { return "medi"; };
-      f["保険料"] = function() { return "insu"; };
-      f["その他"] = function() { return "othr"; };
-      f["収入"  ] = function() { return "earn"; };
-      f["合計"  ] = function() { return ""; };
-      f["収支"  ] = function() { return ""; };
+      f[this.type.FOOD] = function() { return "food"; };
+      f[this.type.OTFD] = function() { return "otfd"; };
+      f[this.type.GOOD] = function() { return "good"; };
+      f[this.type.FRND] = function() { return "frnd"; };
+      f[this.type.TRFC] = function() { return "trfc"; };
+      f[this.type.PLAY] = function() { return "play"; };
+      f[this.type.HOUS] = function() { return "hous"; };
+      f[this.type.ENGY] = function() { return "engy"; };
+      f[this.type.CNCT] = function() { return "cnct"; };
+      f[this.type.MEDI] = function() { return "medi"; };
+      f[this.type.INSU] = function() { return "insu"; };
+      f[this.type.OTHR] = function() { return "othr"; };
+      f[this.type.EARN] = function() { return "earn"; };
+      f[this.type.TTAL] = function() { return ""; };
+      f[this.type.BLNC] = function() { return ""; };
       if (is_special) {
-        f["特入"  ] = function() { return "bnus"; };
-        f["特出"  ] = function() { return "spcl"; };
+        f[this.type.BNUS] = function() { return "bnus"; };
+        f[this.type.SPCL] = function() { return "spcl"; };
       } else {
-        f["特入"  ] = function() { return ""; };
-        f["特出"  ] = function() { return ""; };
+        f[this.type.BNUS] = function() { return ""; };
+        f[this.type.SPCL] = function() { return ""; };
       }
-      f["秘密入"] = function() { return ""; };
-      f["秘密出"] = function() { return ""; };
+      f[this.type.PRVI] = function() { return ""; };
+      f[this.type.PRVO] = function() { return ""; };
       return f;
     },
     // 推移タブ前年
@@ -624,19 +649,20 @@ var app = new Vue({
     // 集計処理(秘密)
     create_privates: function(expenses) {
       var targets = expenses.filter(function(x) {
-        return x.type === "秘密入" || x.type === "秘密出";
+        return x.type === app.type.PRVI || x.type === app.type.PRVO;
       });
 
       var balance = 0;
       var privates = [];
       for (var i = 0; i < targets.length; i++) {
         var exp = targets[i];
-        balance += (exp.cost * (exp.type === "秘密入" ? 1 : -1));
+        balance += (exp.cost * (exp.type === app.type.PRVI ? 1 : -1));
         privates.push({
           date: exp.date,
           name: exp.name,
           cost: Number(exp.cost),
           blnc: balance,
+          note: exp.note,
         });
       }
       return privates;
@@ -662,7 +688,6 @@ var app = new Vue({
     },
     // ファイル選択
     file_change: function(e) {
-      var vm = this;
       var files = e.target.files || e.dataTransfer.files;
       this.import_csv(files[0]);
     },
@@ -693,7 +718,14 @@ var app = new Vue({
     },
     // CSVファイルダウンロード
     export_csv: function(e) {
-      var csv = Papa.unparse(this.expenses_all);
+      var csv = Papa.unparse(this.expenses_all, {
+        quotes: true,
+        quoteChar: '"',
+        escapeChar: '"',
+        delimiter: ',',
+        header: true,
+        newline: "\r\n"
+      });
       let blob = new Blob([csv], { type: "text/csv" });
       let link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AbEasy</title>
-    <link rel="icon" href="./img/favicon.ico" />
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
-    <link type="text/css" rel="stylesheet" href="css/chart.min.css" media="screen,projection" />
-    <link type="text/css" rel="stylesheet" href="AbEasy.css" media="screen,projection" />
-    <style>
-      [v-cloak] {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <section class="application-area">
+<html lang="ja">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AbEasy</title>
+  <link rel="icon" href="./img/favicon.ico" />
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+  <link type="text/css" rel="stylesheet" href="css/chart.min.css" media="screen,projection" />
+  <link type="text/css" rel="stylesheet" href="AbEasy.css" media="screen,projection" />
+  <style>
+    [v-cloak] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <section class="application-area">
     <header>
       <nav class="nav-extended light-blue">
         <div class="nav-content light-blue">
@@ -74,12 +74,14 @@
                 <col class="exp-scrl" />
               </colgroup>
               <tbody>
-                <tr v-for="exp in expenses">
-                  <td class="exp-date">{{ exp.date }}</td>
-                  <td class="exp-name">{{ exp.name }}</td>
-                  <td class="exp-type">{{ exp.type }}</td>
-                  <td class="currency">{{ exp.cost }}</td>
-                </tr>
+                <template v-for="exp in expenses">
+                  <tr v-bind:class="{ note: has_note(exp) }">
+                    <td class="exp-date">{{ exp.date }}</td>
+                    <td class="exp-name" v-bind:title="has_note(exp) ? exp.note : false">{{ exp.name }}</td>
+                    <td class="exp-type">{{ exp.type }}</td>
+                    <td class="currency">{{ exp.cost }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
@@ -103,8 +105,8 @@
           </div>
           <table class="summary">
             <tr>
-              <th>食費  </th><td class="currency">&yen;{{ summary_food }}</td>
-              <th>家賃  </th><td class="currency">&yen;{{ summary_hous }}</td>
+              <th>食費　</th><td class="currency">&yen;{{ summary_food }}</td>
+              <th>家賃　</th><td class="currency">&yen;{{ summary_hous }}</td>
             </tr>
             <tr>
               <th>外食費</th><td class="currency">&yen;{{ summary_otfd }}</td>
@@ -113,7 +115,7 @@
           </table>
           <table class="summary">
             <tr>
-              <th>雑貨  </th><td class="currency">&yen;{{ summary_good }}</td>
+              <th>雑貨　</th><td class="currency">&yen;{{ summary_good }}</td>
               <th>通信費</th><td class="currency">&yen;{{ summary_cnct }}</td>
             </tr>
             <tr>
@@ -132,11 +134,11 @@
           <table class="summary">
             <tr>
               <th class="dummy"></th><td class="dummy"></td>
-              <th>合計  </th><td class="currency">&yen;{{ summary_ttal }}</td>
+              <th>合計　</th><td class="currency">&yen;{{ summary_ttal }}</td>
             </tr>
             <tr>
               <th class="dummy"></th><td class="dummy"></td>
-              <th>収支  </th><td class="currency">&yen;{{ summary_blnc }}</td>
+              <th>収支　</th><td class="currency">&yen;{{ summary_blnc }}</td>
             </tr>
           </table>
         </div>
@@ -249,12 +251,14 @@
                 <col class="prv-scrl" />
               </colgroup>
               <tbody>
-                <tr v-for="prv in privates">
-                  <td class="prv-date">{{ prv.date }}</td>
-                  <td class="prv-name">{{ prv.name }}</td>
-                  <td class="currency">&yen;{{ prv.cost.toLocaleString() }}</td>
-                  <td class="currency">&yen;{{ prv.blnc.toLocaleString() }}</td>
-                </tr>
+                <template v-for="prv in privates">
+                  <tr v-bind:class="{ note: has_note(prv) }">
+                    <td class="prv-date">{{ prv.date }}</td>
+                    <td class="prv-name" v-bind:title="has_note(prv) ? prv.note : false">{{ prv.name }}</td>
+                    <td class="currency">&yen;{{ prv.cost.toLocaleString() }}</td>
+                    <td class="currency">&yen;{{ prv.blnc.toLocaleString() }}</td>
+                  </tr>
+                </template>
               </tbody>
             </table>
           </div>
@@ -295,19 +299,19 @@
         </div>
       </div>
     </footer>
-    </section>
+  </section>
 
-    <script type="text/javascript" src="lib/vue.min.js"></script>
+  <script type="text/javascript" src="lib/vue.min.js"></script>
 
-    <script type="text/javascript" src="lib/chart.min.js"></script>
-    <script type="text/javascript" src="lib/papaparse.min.js"></script>
-    <script type="text/javascript" src="lib/materialize.min.js"></script>
-    <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="lib/chart.min.js"></script>
+  <script type="text/javascript" src="lib/papaparse.min.js"></script>
+  <script type="text/javascript" src="lib/materialize.min.js"></script>
+  <script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
 
-    <script type="text/javascript" src="AbEasy.js"></script>
+  <script type="text/javascript" src="AbEasy.js"></script>
 
-    <script type="text/javascript">
-      M.Tabs.init($('#main-tab'));
-    </script>
-  </body>
+  <script type="text/javascript">
+    M.Tabs.init($('#main-tab'));
+  </script>
+</body>
 </html>
